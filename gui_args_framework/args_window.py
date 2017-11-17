@@ -14,6 +14,7 @@ UI_PATH = os.path.join(BASE_DIR, 'ui/ArgsWindow.ui')
 class ArgsWindow(QMainWindow):
     title = None
     args = []
+    description = ""
 
     geom = (400, 400)
     showTypes = False
