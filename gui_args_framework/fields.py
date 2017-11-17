@@ -7,8 +7,9 @@ class FieldError(Exception):
 
 
 class Field:
-    def __init__(self, name, required=True, default=None, choices=None):
+    def __init__(self, name, label, required=True, default=None, choices=None):
         self._name = name
+        self._label = label
         self._required = required
         self._default = default
         self._choices = choices
@@ -21,6 +22,10 @@ class Field:
     @property
     def name(self):
         return self._name
+
+    @property
+    def label(self):
+        return self._label
 
     @property
     def widget(self):

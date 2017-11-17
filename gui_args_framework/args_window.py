@@ -16,7 +16,8 @@ class ArgsWindow(QMainWindow):
     args = []
 
     geom = (400, 400)
-    showtypes = False
+    showTypes = False
+    descriptionLimit = 50
 
     def __init__(self):
         super().__init__()
@@ -24,6 +25,7 @@ class ArgsWindow(QMainWindow):
         self.setWindowTitle(self.__class__.title)
         self.initGeom()
         self.initArgs()
+        self.initDescription()
 
     def main(self):
         raise NotImplementedError()
@@ -82,11 +84,25 @@ class ArgsWindow(QMainWindow):
     def getArgs(self):
         return self.__class__.args
 
+    def initDescription(self):
+        words = self.__class__.description.split(' ')
+        lines = []
+        i0 = 0
+        for i in range(len(words)):
+            line = ' '.join(words[i0:i])
+            lineNext = ' '.join(words[i0:i + 1])
+            if len(lineNext) > self.__class__.descriptionLimit:
+                i0 = i
+                lines.append(line)
+                lineNext = words[i]
+        lines.append(lineNext)
+        self.ui.descriptionLabel.setText('\n'.join(lines))
+
     def getLabelText(self, field):
-        if self.__class__.showtypes:
-            return "{} [{}]".format(field.name, field.getType())
+        if self.__class__.showTypes:
+            return "{} [{}]".format(field.label, field.getType())
         else:
-            return field.name
+            return field.label
 
     def out(self, *args):
         output = self.ui.outputTextEdit.toPlainText()
