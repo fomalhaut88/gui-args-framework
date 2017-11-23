@@ -1,8 +1,10 @@
 import sys
 import os
+from time import sleep
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtCore import QThread, pyqtSignal
 
 from .fields import FieldError
 
@@ -52,7 +54,9 @@ class ArgsWindow(QMainWindow):
         self.setGeometry(geometry)
 
     def initArgs(self):
-        for i, field in enumerate(self.getArgs()):
+        self.__class__.args = self.getArgs()
+
+        for i, field in enumerate(self.__class__.args):
             labelText = self.getLabelText(field)
             label = QLabel(text=labelText)
             field.createWidget()
@@ -60,27 +64,39 @@ class ArgsWindow(QMainWindow):
 
     def extractVariables(self):
         try:
-            for field in self.getArgs():
-                self.__dict__[field.name] = field.getValue()
-            return True
+            values = {}
+            for field in self.__class__.args:
+                values[field.name] = field.getValue()
+            return values
+
         except FieldError as err:
             self.showError(str(err))
-            return False
+            return None
 
     def startButtonClick(self):
-        success = self.extractVariables()
-        if success:
+        values = self.extractVariables()
+        if values is not None:
             self.ui.outputTextEdit.setPlainText('')
-            try:
-                self.main()
-            except Exception as err:
-                text = "{}: {}".format(
-                    err.__class__.__name__,
-                    str(err)
-                )
-                self.showError(text)
-            else:
-                self.showSuccess("Success")
+
+            mainThread = MainThread(self.main, values, self)
+            mainThread.start()
+
+            msgBox = QMessageBox(self)
+            msgBox.setWindowTitle("Running...")
+            msgBox.setText("Running.\nClick cancel to interrupt.")
+            msgBox.setIcon(QMessageBox.Information)
+            msgBox.setStandardButtons(QMessageBox.Cancel)
+
+            cancelButton = msgBox.button(QMessageBox.Cancel)
+
+            mainThread.stopSignal.connect(msgBox.close)
+            mainThread.errorSignal.connect(self.showError)
+            mainThread.successSignal.connect(self.showSuccess)
+
+            msgBox.exec_()
+
+            if msgBox.clickedButton() == cancelButton and mainThread.isRunning():
+                mainThread.terminate()
 
     def getArgs(self):
         return self.__class__.args
@@ -130,3 +146,30 @@ class ArgsWindow(QMainWindow):
         msgBox.setText(text)
         msgBox.setIcon(QMessageBox.Information)
         msgBox.exec_()
+
+
+class MainThread(QThread):
+    stopSignal = pyqtSignal()
+    errorSignal = pyqtSignal(str)
+    successSignal = pyqtSignal(str)
+
+    def __init__(self, main, values, parent):
+        super().__init__()
+        self.main = main
+        self.values = values
+        self.parent = parent
+
+    def run(self):
+        try:
+            sleep(0.01)
+            self.main(self.values)
+        except Exception as err:
+            text = "{}: {}".format(
+                err.__class__.__name__,
+                str(err)
+            )
+            self.errorSignal.emit(text)
+        else:
+            self.successSignal.emit("Success")
+        finally:
+            self.stopSignal.emit()
