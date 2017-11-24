@@ -43,14 +43,14 @@ class Field:
         rawValue = self.getRawValue()
         if rawValue == '':
             if self._required:
-                raise FieldError("value '{}' required".format(self._name))
+                raise FieldError("value '{}' required".format(self._label))
             else:
                 return None
         else:
             try:
                 return self.convert(rawValue)
             except:
-                raise FieldError("invalid value: '{}'".format(self._name))
+                raise FieldError("invalid value: '{}'".format(self._label))
 
     def convert(self, value):
         return value

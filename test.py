@@ -10,7 +10,6 @@ class TestWindow(ArgsWindow):
     description = "This program calculates sum of two integer numbers."
 
     def main(self, values):
-        raise KeyError("my error")
         z = values['x'] + values['y']
         print(z)
 
