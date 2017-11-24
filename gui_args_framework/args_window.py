@@ -17,6 +17,7 @@ class ArgsWindow(QMainWindow):
     args = []
     description = ""
 
+    window_pos = (100, 100)
     geom = (400, 400)
     showTypes = False
     descriptionLimit = 50
@@ -48,6 +49,8 @@ class ArgsWindow(QMainWindow):
 
     def initGeom(self):
         geometry = self.geometry()
+        geometry.setLeft(self.__class__.window_pos[0])
+        geometry.setTop(self.__class__.window_pos[1])
         geometry.setWidth(self.__class__.geom[0])
         geometry.setHeight(self.__class__.geom[1])
         self.setGeometry(geometry)
