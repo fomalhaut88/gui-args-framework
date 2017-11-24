@@ -10,7 +10,7 @@ from setuptools import find_packages
 
 
 setup(
-    name='qui-args-framework',
+    name='gui-args-framework',
     version='1.0',
     packages=find_packages(),
     license=open('LICENSE.txt').read(),
