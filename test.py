@@ -1,5 +1,3 @@
-from time import sleep
-
 from gui_args_framework import ArgsWindow, fields
 
 

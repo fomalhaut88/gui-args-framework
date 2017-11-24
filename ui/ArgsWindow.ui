@@ -22,7 +22,7 @@
       </property>
       <widget class="QWidget" name="argsTab">
        <attribute name="title">
-        <string>Args</string>
+        <string>Arguments</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout">
         <property name="fieldGrowthPolicy">
@@ -41,16 +41,6 @@
            <string>Start</string>
           </property>
          </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="outputTab">
-       <attribute name="title">
-        <string>Output</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QPlainTextEdit" name="outputTextEdit"/>
         </item>
        </layout>
       </widget>

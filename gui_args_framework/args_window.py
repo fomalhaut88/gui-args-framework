@@ -1,6 +1,5 @@
 import sys
 import os
-from time import sleep
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
@@ -76,10 +75,7 @@ class ArgsWindow(QMainWindow):
     def startButtonClick(self):
         values = self.extractVariables()
         if values is not None:
-            self.ui.outputTextEdit.setPlainText('')
-
             mainThread = MainThread(self.main, values, self)
-            mainThread.start()
 
             msgBox = QMessageBox(self)
             msgBox.setWindowTitle("Running...")
@@ -93,6 +89,7 @@ class ArgsWindow(QMainWindow):
             mainThread.errorSignal.connect(self.showError)
             mainThread.successSignal.connect(self.showSuccess)
 
+            mainThread.start()
             msgBox.exec_()
 
             if msgBox.clickedButton() == cancelButton and mainThread.isRunning():
@@ -120,11 +117,6 @@ class ArgsWindow(QMainWindow):
             return "{} [{}]".format(field.label, field.getType())
         else:
             return field.label
-
-    def out(self, *args):
-        output = self.ui.outputTextEdit.toPlainText()
-        output += ' '.join(map(str, args)) + '\n'
-        self.ui.outputTextEdit.setPlainText(output)
 
     def confirm(self, prompt):
         reply = QMessageBox.question(
@@ -161,7 +153,6 @@ class MainThread(QThread):
 
     def run(self):
         try:
-            sleep(0.01)
             self.main(self.values)
         except Exception as err:
             text = "{}: {}".format(
