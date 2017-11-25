@@ -1,12 +1,11 @@
 import sys
 import os
-import traceback
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
-from PyQt5.QtCore import QThread, pyqtSignal
 
 from .fields import FieldError
+from .main_thread import MainThread
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -92,6 +91,8 @@ class ArgsWindow(QMainWindow):
             mainThread.stopSignal.connect(msgBox.close)
             mainThread.errorSignal.connect(self.showError)
             mainThread.successSignal.connect(self.showSuccess)
+            mainThread.rpcMessage.connect(self.showInfo)
+            mainThread.rpcConfirm.connect(self.confirm)
 
             mainThread.start()
             msgBox.exec_()
@@ -143,41 +144,8 @@ class ArgsWindow(QMainWindow):
         msgBox.setIcon(QMessageBox.Information)
         msgBox.exec_()
 
-
-class MainThread(QThread):
-    stopSignal = pyqtSignal()
-    errorSignal = pyqtSignal(str)
-    successSignal = pyqtSignal(str)
-
-    def __init__(self, main, params):
-        super().__init__()
-        self.main = main
-        self.params = params
-
-    def run(self):
-        try:
-            self.main(self)
-        except Exception as err:
-            text = "{}: {}".format(
-                err.__class__.__name__,
-                str(err)
-            )
-            self.errorSignal.emit(text)
-            print(traceback.format_exc())
-        else:
-            self.successSignal.emit("Success")
-        finally:
-            self.stopSignal.emit()
-
-    def confirm(self, prompt):
-        reply = QMessageBox.question(
-            None, "Confirmation", prompt,
-            QMessageBox.Yes, QMessageBox.No
-        )
-        return reply == QMessageBox.Yes
-
-    def message(self, text):
+    def showInfo(self, text):
         QMessageBox.question(
-            None, "Message", text,
+            self, "Message", text,
             QMessageBox.Ok
         )
