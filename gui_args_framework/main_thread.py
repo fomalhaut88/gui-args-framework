@@ -19,6 +19,9 @@ class MainThread(QThread):
         self.rpcMessage = RpcCallStr()
         self.rpcConfirm = RpcCallStr()
 
+    def __getitem__(self, key):
+        return self.params[key]
+
     def run(self):
         try:
             self.main(self)
