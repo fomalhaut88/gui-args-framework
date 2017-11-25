@@ -20,7 +20,7 @@ class TestWindow(ArgsWindow):
 
     def main(self, this):
         if this.confirm("Are you sure?"):
-            z = this.params['x'] + this.params['y']
+            z = this['x'] + this['y']
             this.message("The sum is {}".format(z))
 
 
