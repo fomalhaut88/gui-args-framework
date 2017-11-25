@@ -1,5 +1,6 @@
 import sys
 import os
+import traceback
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
@@ -76,9 +77,9 @@ class ArgsWindow(QMainWindow):
             return None
 
     def startButtonClick(self):
-        values = self.extractVariables()
-        if values is not None:
-            mainThread = MainThread(self.main, values, self)
+        params = self.extractVariables()
+        if params is not None:
+            mainThread = MainThread(self.main, params)
 
             msgBox = QMessageBox(self)
             msgBox.setWindowTitle("Running...")
@@ -148,22 +149,35 @@ class MainThread(QThread):
     errorSignal = pyqtSignal(str)
     successSignal = pyqtSignal(str)
 
-    def __init__(self, main, values, parent):
+    def __init__(self, main, params):
         super().__init__()
         self.main = main
-        self.values = values
-        self.parent = parent
+        self.params = params
 
     def run(self):
         try:
-            self.main(self.values)
+            self.main(self)
         except Exception as err:
             text = "{}: {}".format(
                 err.__class__.__name__,
                 str(err)
             )
             self.errorSignal.emit(text)
+            print(traceback.format_exc())
         else:
             self.successSignal.emit("Success")
         finally:
             self.stopSignal.emit()
+
+    def confirm(self, prompt):
+        reply = QMessageBox.question(
+            None, "Confirmation", prompt,
+            QMessageBox.Yes, QMessageBox.No
+        )
+        return reply == QMessageBox.Yes
+
+    def message(self, text):
+        QMessageBox.question(
+            None, "Message", text,
+            QMessageBox.Ok
+        )

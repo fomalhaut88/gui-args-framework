@@ -9,9 +9,9 @@ class TestWindow(ArgsWindow):
     ]
     description = "This program calculates sum of two integer numbers."
 
-    def main(self, values):
-        z = values['x'] + values['y']
-        print(z)
+    def main(self, this):
+        z = this.params['x'] + this.params['y']
+        this.message("The sum is {}".format(z))
 
 
 TestWindow.run()
