@@ -17,6 +17,6 @@ setup(
     long_description=open('README.md').read(),
     data_files=[('ui', ['ui/ArgsWindow.ui'])],
     install_requires=[
-        'PyQt5',
+        'PyQt5==5.8.2',
     ],
 )
