@@ -1,5 +1,6 @@
 import sys
 import os
+from pkg_resources import resource_filename
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
@@ -8,8 +9,7 @@ from .fields import FieldError
 from .main_thread import MainThread
 
 
-BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-UI_PATH = os.path.join(BASE_DIR, 'ui/ArgsWindow.ui')
+UI_PATH = resource_filename(__name__, 'ui/ArgsWindow.ui')
 
 
 class ArgsWindow(QMainWindow):
@@ -43,6 +43,7 @@ class ArgsWindow(QMainWindow):
         sys.exit(app.exec_())
 
     def initUI(self):
+        path = resource_filename(__name__, 'ui/ArgsWindow.ui')
         ui = uic.loadUi(UI_PATH, self)
         ui.startButton.clicked.connect(self.startButtonClick)
         return ui
