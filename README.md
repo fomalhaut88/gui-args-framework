@@ -26,3 +26,7 @@ class TestWindow(ArgsWindow):
 
 TestWindow.run()
 ```
+
+## Installation
+
+    pip install git+https://github.com/fomalhaut88/gui-args-framework.git
