@@ -1,10 +1,10 @@
-**gui-args-framework** provides a user-friendly way to implement Python programs with GUI.
+# gui-args-framework
 
-Supposing, you have developed a program that takes arguments, does something and provides a result as text lines.
-Usually you develop such things as console applications that gives other people creeps if they are far from programming.
-With gui-args-framework it can be easily done through GUI.
+**gui-args-framework** provides a user-friendly way to implement your Python script with GUI easily and quickly, instead of dark ugly terminal window that scares people who are far from programming.
 
-An example of a program that calculates sum of two integer numbers:
+Supposing, you have developed a program that takes arguments, does something and provides a result as text lines. Usually you develop such things as console applications that can be not so convenient to users. With gui-args-framework it can be easily done through GUI.
+
+The example below is simple to understand how it works. There is a program to calculate sum of two integers:
 
 ```python
 from gui_args_framework import ArgsWindow, fields
