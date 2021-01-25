@@ -23,7 +23,8 @@ setup(
     license=open('LICENSE.txt').read(),
     long_description=open('README.md').read(),
     install_requires=[
-        'PyQt5==5.8.2',
+        'PyQt5==5.15.2',
+        'PyQt5-sip==12.8.1',
     ],
     package_data=package_data,
 )
