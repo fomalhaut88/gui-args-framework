@@ -4,27 +4,19 @@ To make release:
 Installation:
     python setup.py install
 """
-import sys
 from distutils.core import setup
 from setuptools import find_packages
 
 
-package_data = {
-    'gui_args_framework': [
-        'ui/ArgsWindow.ui',
-    ]
-}
-
-
 setup(
     name='gui_args_framework',
-    version='1.0',
+    version='1.1',
     packages=find_packages(),
     license=open('LICENSE.txt').read(),
     long_description=open('README.md').read(),
     install_requires=[
-        'PyQt5==5.15.2',
-        'PyQt5-sip==12.8.1',
+        'PyQt5==5.15.4',
+        'PyQt5-Qt5==5.15.2',
+        'PyQt5-sip==12.9.0',
     ],
-    package_data=package_data,
 )

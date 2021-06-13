@@ -1,15 +1,58 @@
 import sys
-import os
-from pkg_resources import resource_filename
 
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QMessageBox
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QMessageBox
 
 from .fields import FieldError
 from .main_thread import MainThread
 
 
-UI_PATH = resource_filename(__name__, 'ui/ArgsWindow.ui')
+class Ui_MainWindow:
+    """
+    Generated from the command:
+        pyuic5 gui_args_framework/ui/ArgsWindow.ui
+    """
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(728, 488)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.tabWidget.setObjectName("tabWidget")
+        self.argsTab = QtWidgets.QWidget()
+        self.argsTab.setObjectName("argsTab")
+        self.formLayout = QtWidgets.QFormLayout(self.argsTab)
+        self.formLayout.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setObjectName("formLayout")
+        self.descriptionLabel = QtWidgets.QLabel(self.argsTab)
+        self.descriptionLabel.setText("")
+        self.descriptionLabel.setObjectName("descriptionLabel")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.descriptionLabel)
+        self.startButton = QtWidgets.QPushButton(self.argsTab)
+        self.startButton.setObjectName("startButton")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.startButton)
+        self.tabWidget.addTab(self.argsTab, "")
+        self.verticalLayout.addWidget(self.tabWidget)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 728, 25))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.startButton.setText(_translate("MainWindow", "Start"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.argsTab), _translate("MainWindow", "Arguments"))
 
 
 class ArgsWindow(QMainWindow):
@@ -43,8 +86,8 @@ class ArgsWindow(QMainWindow):
         sys.exit(app.exec_())
 
     def initUI(self):
-        path = resource_filename(__name__, 'ui/ArgsWindow.ui')
-        ui = uic.loadUi(UI_PATH, self)
+        ui = Ui_MainWindow()
+        ui.setupUi(self)
         ui.startButton.clicked.connect(self.startButtonClick)
         return ui
 

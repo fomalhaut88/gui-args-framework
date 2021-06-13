@@ -3,5 +3,7 @@
 __pycache__
 *.egg-info
 
-build
-dist
+/build/
+/dist/
+
+/.venv/
