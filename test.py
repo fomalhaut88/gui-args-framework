@@ -1,11 +1,12 @@
-from gui_args_framework import ArgsWindow, fields
+from gui_args_framework.args_window import ArgsWindow
+from gui_args_framework.fields import IntegerField
 
 
 class TestWindow(ArgsWindow):
     title = "Test"
     args = [
-        fields.IntegerField(name='x', label='First'),
-        fields.IntegerField(name='y', label='Second'),
+        IntegerField(name='x', label='First'),
+        IntegerField(name='y', label='Second'),
     ]
     description = "This program calculates sum of two integer numbers."
 

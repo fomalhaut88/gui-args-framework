@@ -7,14 +7,15 @@ Supposing, you have developed a program that takes arguments, does something and
 The example below is simple to understand how it works. There is a program to calculate sum of two integers:
 
 ```python
-from gui_args_framework import ArgsWindow, fields
+from gui_args_framework.args_window import ArgsWindow
+from gui_args_framework.fields import IntegerField
 
 
 class TestWindow(ArgsWindow):
     title = "Test"
     args = [
-        fields.IntegerField(name='x', label='First'),
-        fields.IntegerField(name='y', label='Second'),
+        IntegerField(name='x', label='First'),
+        IntegerField(name='y', label='Second'),
     ]
     description = "This program calculates sum of two integer numbers."
 
@@ -30,3 +31,40 @@ TestWindow.run()
 ## Installation
 
     pip install git+https://github.com/fomalhaut88/gui-args-framework.git
+
+## Window parameters
+
+```
+    title = None
+    args = []
+    description = ""
+
+    window_pos = (100, 100)
+    geom = (400, 400)
+    showTypes = False
+    descriptionLimit = 50
+```
+
+## This methods
+
+- confirm(prompt)
+- message(text)
+
+## Fields arguments
+
+name
+label
+required=True
+default=None
+choices=None
+
+## Fields
+
+- StringField
+- IntegerField
+- FloatField
+- BooleanField
+- EnumField
+- FileOpenField
+- DirectoryField
+- FileSaveField
