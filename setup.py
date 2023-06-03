@@ -12,7 +12,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     license="Free",
-    description="A framework to create a GUI for a Python console application",
+    description="A framework to create a GUI for a Python console application.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
