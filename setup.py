@@ -4,8 +4,7 @@ To make release:
 Installation:
     python setup.py install
 """
-from distutils.core import setup
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 from gui_args_framework.version import __version__
 
@@ -15,7 +14,9 @@ setup(
     version=__version__,
     packages=find_packages(),
     license=open('LICENSE.txt').read(),
+    description="A framework to create a GUI for a Python console application",
     long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
     install_requires=[
         'PyQt5>=5.15',
         'PyQt5-Qt5>=5.15',

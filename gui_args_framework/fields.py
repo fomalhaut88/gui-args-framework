@@ -49,7 +49,7 @@ class Field:
         else:
             try:
                 return self.convert(rawValue)
-            except:
+            except Exception:
                 raise FieldError("invalid value: '{}'".format(self._label))
 
     def convert(self, value):
