@@ -30,7 +30,7 @@ TestWindow.run()
 
 ## Installation
 
-    pip install git+https://github.com/fomalhaut88/gui-args-framework.git
+    pip install gui-args-framework
 
 ## Window parameters
 
