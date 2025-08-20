@@ -7,6 +7,9 @@ from .fields import FieldError
 from .main_thread import MainThread
 
 
+__all__ = ['ArgsWindow']
+
+
 class Ui_MainWindow:
     """
     Generated from the command:
@@ -56,42 +59,78 @@ class Ui_MainWindow:
 
 
 class ArgsWindow(QMainWindow):
-    title = None
+    """
+    Base class that is a parent for your application window. All you need is
+    inheriting from it and override the desirable attributes.
+    """
+
+    title = "Blank"
+    """
+    Title of the application.
+    """
+
     args = []
+    """
+    Argument list. Take them from gui_args_framework.fields.
+    """
+
     description = ""
+    """
+    Description text of the application.
+    """
 
     window_pos = (100, 100)
+    """
+    Initial position of the window.
+    """
+
     geom = (400, 400)
+    """
+    Size of the window.
+    """
+
     showTypes = False
+    """
+    Print types of the arguments in the label.
+    """
+
     descriptionLimit = 50
+    """
+    Limit for the description line.
+    """
 
     def __init__(self):
         super().__init__()
-        self.ui = self.initUI()
+        self._ui = self._initUI()
         self.setWindowTitle(self.__class__.title)
-        self.initGeom()
-        self.initArgs()
-        self.initDescription()
+        self._initGeom()
+        self._initArgs()
+        self._initDescription()
 
-    def main(self):
+    def main(self, this: MainThread):
+        """
+        Main function of the application. It must be overridden.
+        """
         raise NotImplementedError()
 
     @classmethod
     def run(cls):
-        assert cls.title, "no title"
+        """
+        Run the application.
+        """
         app = QApplication(sys.argv)
         app.setApplicationName(cls.title)
         window = cls()
         window.show()
         sys.exit(app.exec_())
 
-    def initUI(self):
+    def _initUI(self):
         ui = Ui_MainWindow()
         ui.setupUi(self)
-        ui.startButton.clicked.connect(self.startButtonClick)
+        ui.startButton.clicked.connect(self._startButtonClick)
         return ui
 
-    def initGeom(self):
+    def _initGeom(self):
         geometry = self.geometry()
         geometry.setLeft(self.__class__.window_pos[0])
         geometry.setTop(self.__class__.window_pos[1])
@@ -99,16 +138,16 @@ class ArgsWindow(QMainWindow):
         geometry.setHeight(self.__class__.geom[1])
         self.setGeometry(geometry)
 
-    def initArgs(self):
-        self.__class__.args = self.getArgs()
+    def _initArgs(self):
+        self.__class__.args = self._getArgs()
 
         for i, field in enumerate(self.__class__.args):
-            labelText = self.getLabelText(field)
+            labelText = self._getLabelText(field)
             label = QLabel(text=labelText)
             field.createWidget()
-            self.ui.argsTab.layout().insertRow(i, label, field.widget)
+            self._ui.argsTab.layout().insertRow(i, label, field.widget)
 
-    def extractVariables(self):
+    def _extractVariables(self):
         try:
             values = {}
             for field in self.__class__.args:
@@ -119,8 +158,8 @@ class ArgsWindow(QMainWindow):
             self.showError(str(err))
             return None
 
-    def startButtonClick(self):
-        params = self.extractVariables()
+    def _startButtonClick(self):
+        params = self._extractVariables()
         if params is not None:
             mainThread = MainThread(self.main, params)
 
@@ -144,10 +183,10 @@ class ArgsWindow(QMainWindow):
             if msgBox.clickedButton() == cancelButton and mainThread.isRunning():
                 mainThread.terminate()
 
-    def getArgs(self):
+    def _getArgs(self):
         return self.__class__.args
 
-    def initDescription(self):
+    def _initDescription(self):
         words = self.__class__.description.split(' ')
         lines = []
         i0 = 0
@@ -159,36 +198,48 @@ class ArgsWindow(QMainWindow):
                 lines.append(line)
                 lineNext = words[i]
         lines.append(lineNext)
-        self.ui.descriptionLabel.setText('\n'.join(lines))
+        self._ui.descriptionLabel.setText('\n'.join(lines))
 
-    def getLabelText(self, field):
+    def _getLabelText(self, field):
         if self.__class__.showTypes:
             return "{} [{}]".format(field.label, field.getType())
         else:
             return field.label
 
-    def confirm(self, prompt):
+    def confirm(self, prompt: str) -> bool:
+        """
+        Show confirmation dialog.
+        """
         reply = QMessageBox.question(
             self, "Confirmation", prompt,
             QMessageBox.Yes, QMessageBox.No
         )
         return reply == QMessageBox.Yes
 
-    def showError(self, text):
+    def showError(self, text: str):
+        """
+        Show error dialog.
+        """
         msgBox = QMessageBox(self)
         msgBox.setWindowTitle("Error")
         msgBox.setText(text)
         msgBox.setIcon(QMessageBox.Critical)
         msgBox.exec_()
 
-    def showSuccess(self, text):
+    def showSuccess(self, text: str):
+        """
+        Show success dialog.
+        """
         msgBox = QMessageBox(self)
         msgBox.setWindowTitle("Completed")
         msgBox.setText(text)
         msgBox.setIcon(QMessageBox.Information)
         msgBox.exec_()
 
-    def showInfo(self, text):
+    def showInfo(self, text: str):
+        """
+        Show info dialog.
+        """
         QMessageBox.question(
             self, "Message", text,
             QMessageBox.Ok
